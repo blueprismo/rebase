@@ -86,19 +86,30 @@ feature/add-sidebar: A───B───C───D───E' ✅ Clean histor
 git checkout main
 git pull origin main
 
+# Create a base file that both branches will modify
+echo "Base component" > components.txt
+git add components.txt
+git commit -m "Add base components file"
+git push origin main
+
 # Create first feature branch
 git checkout -b feature/add-navbar
+# Modify the first line - this will conflict with sidebar branch
 echo "NavBar Component v1" > components.txt
 git add components.txt
 git commit -m "Add navbar component"
 
 # Create second feature branch from main (based on old main)
+# IMPORTANT: Checkout main BEFORE the navbar was merged
 git checkout main
 git checkout -b feature/add-sidebar
+# Modify the SAME first line differently - this will cause a conflict!
 echo "Sidebar Component v1" > components.txt
 git add components.txt
 git commit -m "Add sidebar component"
 ```
+
+**Note:** Both branches modify the same line in `components.txt` with different content. This ensures a conflict when rebasing, since Git cannot auto-merge conflicting content on the same line.
 
 ### Step 2: First Developer Merges Their Branch
 
@@ -245,6 +256,7 @@ feature/add-sidebar: A───B───C───D───E' (sidebar applied
 ├─────────────────────────────────────────────────────────────────┤
 │  NavBar Component v1      ← From commit D (navbar)              │
 │  Sidebar Component v1     ← From commit E' (sidebar rebased)    │
+│                             (conflict resolved by combining)     │
 └─────────────────────────────────────────────────────────────────┘
 
 🎯 BENEFITS ACHIEVED:
