@@ -20,6 +20,33 @@ When working on a feature branch for an extended period, the main branch often r
 - Forces you to start over from scratch
 - Not suitable when you want to keep your work
 
+## Why Rebase Instead of Merging Main Into Your Branch
+
+**Rebase** creates a clean, linear history:
+- Replays your commits on top of the latest main
+- **Omits/ignores previous "merge main into my branch" commits** - those merge commits disappear!
+- Results in a linear history as if you started from the current main
+
+**Merging main into your branch** creates merge commits:
+- Creates a "Merge branch 'main' into feature/my-branch" commit each time
+- Results in a messy, non-linear history with multiple merge commits
+- Makes it harder to see what changes you actually made
+
+**Example:**
+```
+# With merge (messy):
+main:         A───B───C───D
+feature:      A───E───M1───F───M2───G
+              ↑       ↑         ↑
+         merge commits clutter history
+
+# With rebase (clean):
+main:         A───B───C───D
+feature:      A───B───C───D───E'───F'───G'
+              ↑
+         clean linear history, merge commits gone!
+```
+
 ## Demo Time: Interactive Rebase
 
 **This demo requires `git rebase -i origin/main` to resolve conflicts.** Follow the steps below to create a conflict scenario with a remote repository (origin).
@@ -262,8 +289,9 @@ feature/add-sidebar: A───B───C───D───E' (sidebar applied
 🎯 BENEFITS ACHIEVED:
 ├── ✅ Both features preserved and working
 ├── ✅ Clean linear git history  
-├── ✅ No messy merge commits
-└── ✅ Easy to review and rollback
+├── ✅ No messy merge commits (previous "merge main" commits are omitted)
+├── ✅ Easy to review and rollback
+└── ✅ History shows commits as if made on current main
 ```
 
 ## Key Commands
